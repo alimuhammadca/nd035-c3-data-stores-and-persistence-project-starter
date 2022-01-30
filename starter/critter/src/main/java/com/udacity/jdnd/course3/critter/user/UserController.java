@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.data.domain.Employee;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import org.checkerframework.checker.units.qual.A;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Users.
@@ -58,8 +60,9 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        //return employeeService.get(employeeDTO);
-        return null;
+        Set<EmployeeSkill> skills = employeeDTO.getSkills();
+        List<EmployeeDTO> employees = employeeService.getEmployeesForService(employeeDTO.getDate().getDayOfWeek(),skills);
+        return employees;
     }
 
 }

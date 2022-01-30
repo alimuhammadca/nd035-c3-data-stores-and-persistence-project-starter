@@ -9,11 +9,13 @@ import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class CustomerService {
 
     @Autowired
@@ -40,6 +42,9 @@ public class CustomerService {
     private CustomerDTO convertCustomerToCustomerDTO(Customer customer){
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
+        for (Pet pet : customer.getPets()) {
+            customerDTO.getPetIds().add(pet.getId());
+        }
         return customerDTO;
     }
 
@@ -52,7 +57,10 @@ public class CustomerService {
     private List<CustomerDTO> getCustomerDTOs(List<Customer> customers) {
         List<CustomerDTO> customerDTOs = new ArrayList<>();
         for (Customer customer: customers) {
-            customerDTOs.add(convertCustomerToCustomerDTO(customer));
+            CustomerDTO dto = convertCustomerToCustomerDTO(customer);
+            for (Pet pet : customer.getPets())
+                dto.getPetIds().add(pet.getId());
+            customerDTOs.add(dto);
         }
         return customerDTOs;
     }
