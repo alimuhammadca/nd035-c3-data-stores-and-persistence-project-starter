@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.data.domain.Customer;
 import com.udacity.jdnd.course3.critter.data.domain.Employee;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
@@ -30,27 +31,29 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        return customerService.save(customerDTO);
+        Customer customer = CustomerDTO.convertCustomerDTOToCustomer(customerDTO);
+        return CustomerDTO.convertCustomerToCustomerDTO(customerService.save(customer));
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        return customerService.getAll();
+        return CustomerDTO.getCustomerDTOs(customerService.getAll());
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        return customerService.getByPet(petId);
+        return CustomerDTO.convertCustomerToCustomerDTO(customerService.getByPet(petId));
     }
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        return employeeService.save(employeeDTO);
+        Employee employee = EmployeeDTO.convertEmployeeDTOToEmployee(employeeDTO);
+        return EmployeeDTO.convertEmployeeToEmployeeDTO(employeeService.save(employee));
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        return employeeService.get(employeeId);
+        return EmployeeDTO.convertEmployeeToEmployeeDTO(employeeService.get(employeeId));
     }
 
     @PutMapping("/employee/{employeeId}")
@@ -61,7 +64,7 @@ public class UserController {
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         Set<EmployeeSkill> skills = employeeDTO.getSkills();
-        List<EmployeeDTO> employees = employeeService.getEmployeesForService(employeeDTO.getDate().getDayOfWeek(),skills);
+        List<EmployeeDTO> employees = EmployeeDTO.getEmployeeDTOs(employeeService.getEmployeesForService(employeeDTO.getDate().getDayOfWeek(),skills));
         return employees;
     }
 

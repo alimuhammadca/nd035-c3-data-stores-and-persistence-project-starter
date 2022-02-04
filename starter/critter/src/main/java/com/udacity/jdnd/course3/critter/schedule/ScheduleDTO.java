@@ -1,7 +1,10 @@
 package com.udacity.jdnd.course3.critter.schedule;
 
+import com.udacity.jdnd.course3.critter.data.domain.Employee;
+import com.udacity.jdnd.course3.critter.data.domain.Pet;
+import com.udacity.jdnd.course3.critter.data.domain.Schedule;
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
-
+import org.springframework.beans.BeanUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,4 +60,32 @@ public class ScheduleDTO {
     public void setActivities(Set<EmployeeSkill> activities) {
         this.activities = activities;
     }
+
+    public static ScheduleDTO convertScheduleToScheduleDTO(Schedule schedule){
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        BeanUtils.copyProperties(schedule, scheduleDTO);
+        for (Employee employee : schedule.getEmployees()) {
+            scheduleDTO.getEmployeeIds().add(employee.getId());
+        }
+        for (Pet pet : schedule.getPets()) {
+            scheduleDTO.getPetIds().add(pet.getId());
+        }
+        return scheduleDTO;
+    }
+
+    public static Schedule convertScheduleDTOToSchedule(ScheduleDTO scheduleDTO){
+        Schedule schedule = new Schedule();
+        BeanUtils.copyProperties(scheduleDTO, schedule);
+
+        return schedule;
+    }
+
+    public static List<ScheduleDTO> getScheduleDTOs(List<Schedule> schedules) {
+        List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
+        for (Schedule schedule: schedules) {
+            scheduleDTOs.add(convertScheduleToScheduleDTO(schedule));
+        }
+        return scheduleDTOs;
+    }
+
 }

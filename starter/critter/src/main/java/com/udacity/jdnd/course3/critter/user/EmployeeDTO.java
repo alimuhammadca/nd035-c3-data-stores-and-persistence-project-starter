@@ -1,6 +1,10 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.data.domain.Employee;
+import org.springframework.beans.BeanUtils;
 import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,4 +48,25 @@ public class EmployeeDTO {
     public void setDaysAvailable(Set<DayOfWeek> daysAvailable) {
         this.daysAvailable = daysAvailable;
     }
+
+    public static EmployeeDTO convertEmployeeToEmployeeDTO(Employee employee){
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
+    }
+
+    public static Employee convertEmployeeDTOToEmployee(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        return employee;
+    }
+
+    public static List<EmployeeDTO> getEmployeeDTOs(List<Employee> employees) {
+        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
+        for (Employee employee: employees) {
+            employeeDTOs.add(convertEmployeeToEmployeeDTO(employee));
+        }
+        return employeeDTOs;
+    }
+
 }

@@ -1,5 +1,9 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.data.domain.Customer;
+import com.udacity.jdnd.course3.critter.data.domain.Pet;
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,4 +57,31 @@ public class CustomerDTO {
     public void setPetIds(List<Long> petIds) {
         this.petIds = petIds;
     }
+
+    public static CustomerDTO convertCustomerToCustomerDTO(Customer customer){
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer, customerDTO);
+        for (Pet pet : customer.getPets()) {
+            customerDTO.getPetIds().add(pet.getId());
+        }
+        return customerDTO;
+    }
+
+    public static Customer convertCustomerDTOToCustomer(CustomerDTO customerDTO){
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer);
+        return customer;
+    }
+
+    public static List<CustomerDTO> getCustomerDTOs(List<Customer> customers) {
+        List<CustomerDTO> customerDTOs = new ArrayList<>();
+        for (Customer customer: customers) {
+            CustomerDTO dto = convertCustomerToCustomerDTO(customer);
+            for (Pet pet : customer.getPets())
+                dto.getPetIds().add(pet.getId());
+            customerDTOs.add(dto);
+        }
+        return customerDTOs;
+    }
+
 }
